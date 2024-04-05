@@ -19,25 +19,47 @@ let cats = [
 let catList = document.querySelector('.cat--list');
 
 cats.forEach(function (cat) {
-    catList.insertAdjacentHTML('beforeend', '<div class="cat--item">\n' +
-        '                <img src="images/'+ cat.image +'" alt="Cat image">\n' +
-        '                <div data-description="'+ cat.description +'" class="cat--name">\n' +
-        '                    '+ cat.name +'\n' +
-        '                </div>\n' +
-        '            </div>')
+    catList.insertAdjacentHTML('beforeend', `<div class='cat--item'><img src="images/${cat.image}" alt="Cat image">\n<div data-description="${cat.description}" class="cat--name">\n${cat.name}\n</div>\n</div>`)
 })
 
 let catItems = document.querySelectorAll('.cat--item');
 
 catItems.forEach(function (cat) {
     cat.addEventListener("click",function (){
-        let mainCat =document.querySelector('.main--cat')
+        let mainCat = document.querySelector('.main--cat')
         let mainCatImage = document.querySelector('.catimg').querySelector('img');
         let mainCatText = mainCat.querySelector('.cat--text--value');
 
         let catItemImageNode = cat.querySelector('img')
         let catItemDescriptionNode = cat.querySelector('div');
+
         mainCatImage.setAttribute('src', catItemImageNode.getAttribute('src'));
         mainCatText.innerText = catItemDescriptionNode.dataset.description
     })
-})
+});
+
+
+document.querySelector('.add-run').addEventListener('click', function () {
+    let runCount = document.querySelector('.run-count');
+    runCount.innerText = parseInt(runCount.innerText) + parseInt(document.querySelector('.add-run-count').innerText);
+});
+
+let interval;
+
+document.querySelector('.add-interval-run').addEventListener('click', function () {
+    let runCount = document.querySelector('.run-count');
+    let runIntervalCost = document.querySelector('.run-interval-cost');
+    if(parseInt(runCount.innerText) < parseInt(runIntervalCost.innerText)){
+        alert('не хватает денег, боомжара!');
+    } else {
+        let addRunCount = document.querySelector('.add-run-count');
+        let runCountValue = parseInt(addRunCount.innerText);
+        clearInterval(interval);
+        runCount.innerText = parseInt(runCount.innerText) - parseInt(runIntervalCost.innerText);
+        runIntervalCost.innerText = runIntervalCost.innerText * 2
+        interval = setInterval(function () {
+            runCount.innerText = parseInt(runCount.innerText) + runCountValue;
+        }, 3000);
+        addRunCount.innerText = parseInt(addRunCount.innerText) + 1;
+    }
+});
